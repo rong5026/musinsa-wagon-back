@@ -36,10 +36,5 @@ out/
 ### VS Code ###
 .vscode/
 
-### Custom ###
-*.env
-*.DS_Store
-/src/main/generated
-application.properties
-
-/src/main/resources/*.yml
+### QueryDSL Generated ###
+**/src/main/generated/
