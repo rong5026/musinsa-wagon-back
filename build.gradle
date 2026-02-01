@@ -1,85 +1,158 @@
+buildscript {
+    ext {
+        springBootVersion = '3.0.6'
+        querydslPluginVersion = '1.0.10'
+        querydslVersion = '5.0.0'
+        lombokVersion = '1.18.24'
+        querydslSrcDir = 'src/main/querydsl'
+        swaggerVersion = '2.0.2'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE"
+    }
+}
+
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.3.2'
-	id 'io.spring.dependency-management' version '1.1.6'
-	id 'checkstyle'
-	id "me.champeau.jmh" version "0.7.2"
+    id 'com.epages.restdocs-api-spec' version '0.16.0'
+    id 'com.diffplug.spotless' version '6.25.0'
 }
 
-group = 'com.pricewagon'
-version = '0.0.1-SNAPSHOT'
-
-java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
+ext {
+    projectGroup = 'com.musinsa.wagon'
 }
 
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+
+// 모든 서브프로젝트에 적용되는 공통 설정
+subprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'com.diffplug.spotless'
+
+    group = 'com.musinsa.wagon'
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+    compileJava.options.encoding = 'UTF-8'
+
+    repositories {
+        mavenCentral()
+    }
+
+    // 모든 모듈에서 사용하는 공통 의존성
+    dependencies {
+        implementation 'org.jetbrains:annotations:23.0.0'
+
+        // Spring Boot Starter
+        testImplementation('org.springframework.boot:spring-boot-starter-test')
+
+        // Lombok
+        compileOnly("org.projectlombok:lombok:${lombokVersion}")
+        annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+        annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+        // DB
+        runtimeOnly('com.mysql:mysql-connector-j')
+        implementation('org.springframework.boot:spring-boot-starter-jdbc')
+        implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+
+        // Web
+        implementation('org.springframework.boot:spring-boot-starter-web')
+        implementation('org.springframework.boot:spring-boot-starter')
+
+        // Validation
+        implementation('org.springframework.boot:spring-boot-starter-validation')
+
+        // JWT
+        implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+        runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+        runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+
+        // Swagger
+        implementation('org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2')
+
+        // dotenv
+        implementation "me.paulschwarz:spring-dotenv:3.0.0"
+
+        // Flyway
+        implementation 'org.flywaydb:flyway-mysql'
+        implementation 'org.flywaydb:flyway-core'
+
+        // JUnit 5
+        testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    }
+
+    // Spotless 코드 포맷팅 설정
+    spotless {
+        java {
+            target("**/*.java")
+            targetExclude("**/generated/**/*.java")
+            googleJavaFormat().aosp().skipJavadocFormatting()
+            importOrder()
+            removeUnusedImports()
+            trimTrailingWhitespace()
+            endWithNewline()
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+        testLogging {
+            events "passed", "skipped", "failed"
+            showCauses = true
+            showExceptions = true
+            showStackTraces = true
+            exceptionFormat = 'full'
+        }
+    }
 }
 
-repositories {
-	mavenCentral()
+// Core 모듈 - 공통 엔티티, 리포지토리
+project(':core') {
+    bootJar.enabled = false
+    jar.enabled = true
 }
 
-dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+// FO 모듈 - 프론트오피스 API
+project(':fo') {
+    dependencies {
+        api project(':core')
+        api 'org.springframework.retry:spring-retry:2.0.5'
+    }
 
-	// swagger
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
-
-	// QueryDSL
-	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
-	annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
-	annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
-	annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
-
-	// 추가 의존성: javax.annotation을 JDK 9 이상에서 사용할 수 있도록 함
-	implementation 'javax.annotation:javax.annotation-api:1.3.2'
-
-	// JMH dependencies - 최신 버전으로 업데이트
-	jmh 'org.openjdk.jmh:jmh-core:1.35'
-	jmh 'org.openjdk.jmh:jmh-generator-annprocess:1.35'
-	jmh 'org.openjdk.jmh:jmh-generator-bytecode:1.35'
-
-	// Lombok
-	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-	annotationProcessor 'org.projectlombok:lombok'
-	compileOnly 'org.projectlombok:lombok'
-
-	// 스프링 관련 의존성 추가
-	implementation 'org.springframework.boot:spring-boot-starter'
-	implementation 'org.springframework:spring-context'
-	implementation 'org.springframework:spring-beans'
-
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'com.mysql:mysql-connector-j'
-
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    bootJar {
+        manifest {
+            attributes 'Start-Class': 'com.musinsa.wagon.fo.FOApplication'
+        }
+    }
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
+// Batch 모듈 - 배치 작업
+project(':batch') {
+    dependencies {
+        api project(':core')
+        api 'org.springframework.retry:spring-retry:2.0.5'
+    }
 
-compileJava.options.encoding = 'UTF-8'
-compileTestJava.options.encoding = 'UTF-8'
-tasks.withType(Checkstyle) {
-	reports {
-		xml.required = true
-		html.required = true
-	}
-}
-checkstyle {
-	configFile = file("config/checkstyle/naver-checkstyle-rules.xml")
-	configProperties = ["suppressionFile": "config/checkstyle/naver-checkstyle-suppression.xml"]
-}
-bootJar {
-	archiveFileName = 'pricewagon-blue-green-app.jar'
+    bootJar {
+        manifest {
+            attributes 'Start-Class': 'com.musinsa.wagon.batch.BatchApplication'
+        }
+    }
 }
