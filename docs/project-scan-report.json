@@ -1,0 +1,118 @@
+{
+  "workflow_version": "1.2.0",
+  "timestamps": {
+    "started": "2025-12-06T20:55:00Z",
+    "last_updated": "2025-12-06T21:15:00Z",
+    "completed": "2025-12-06T21:15:00Z"
+  },
+  "mode": "initial_scan",
+  "scan_level": "quick",
+  "project_root": "/Users/hong-yeonghwan/Desktop/MusinsaWagon_V2/musinsa-wagon-nextjs-react-ts-v2",
+  "output_folder": "/Users/hong-yeonghwan/Desktop/MusinsaWagon_V2/musinsa-wagon-nextjs-react-ts-v2/docs",
+  "repository_type": "monolith",
+  "project_types": [
+    {
+      "part_id": "main",
+      "project_type_id": "web",
+      "display_name": "Next.js Web Application"
+    }
+  ],
+  "completed_steps": [
+    {
+      "step": "step_0",
+      "status": "completed",
+      "timestamp": "2025-12-06T20:55:00Z",
+      "summary": "Quick Scan selected, documentation requirements loaded"
+    },
+    {
+      "step": "step_1",
+      "status": "completed",
+      "timestamp": "2025-12-06T21:00:00Z",
+      "summary": "Project classified as monolith, web type detected"
+    },
+    {
+      "step": "step_2",
+      "status": "completed",
+      "timestamp": "2025-12-06T21:02:00Z",
+      "summary": "Found existing documentation: README.md, CLAUDE.md"
+    },
+    {
+      "step": "step_3",
+      "status": "completed",
+      "timestamp": "2025-12-06T21:04:00Z",
+      "summary": "Technology stack analyzed: Next.js 15.3.3, React 19, TypeScript 5"
+    },
+    {
+      "step": "step_5",
+      "status": "completed",
+      "timestamp": "2025-12-06T21:06:00Z",
+      "summary": "Source tree analysis generated"
+    },
+    {
+      "step": "step_6",
+      "status": "completed",
+      "timestamp": "2025-12-06T21:08:00Z",
+      "summary": "Development and deployment guides created"
+    },
+    {
+      "step": "step_10",
+      "status": "completed",
+      "timestamp": "2025-12-06T21:15:00Z",
+      "summary": "Master index generated"
+    }
+  ],
+  "current_step": "completed",
+  "findings": {
+    "repository_type": "monolith",
+    "parts_count": 1,
+    "primary_tech": "Next.js 15.3.3 + React 19 + TypeScript 5",
+    "project_classification": {
+      "type": "Web Application",
+      "framework": "Next.js 15 with App Router",
+      "language": "TypeScript (strict mode)",
+      "styling": "Tailwind CSS 4 + shadcn/ui",
+      "state_management": "Zustand (global) + TanStack Query (server)",
+      "api_client": "OpenAPI Generator (Axios)"
+    }
+  },
+  "outputs_generated": [
+    "project-scan-report.json",
+    "project-overview.md",
+    "architecture.md",
+    "source-tree-analysis.md",
+    "development-guide.md",
+    "index.md"
+  ],
+  "scan_summary": {
+    "total_files_analyzed": "Pattern-based (quick scan)",
+    "documentation_generated": 6,
+    "key_directories": [
+      "src/apis/",
+      "src/app/",
+      "src/components/",
+      "src/features/",
+      "src/hooks/",
+      "src/queries/",
+      "src/stores/",
+      "src/types/",
+      "src/utils/"
+    ],
+    "key_technologies": [
+      "Next.js 15.3.3",
+      "React 19.0.0",
+      "TypeScript 5.x",
+      "Tailwind CSS 4.1.10",
+      "shadcn/ui",
+      "Zustand 5.0.5",
+      "TanStack Query 5.80.7",
+      "Axios 1.10.0"
+    ]
+  },
+  "recommended_next_actions": [
+    "Review the master index at docs/index.md",
+    "Read architecture documentation for system design",
+    "Follow the development guide for local setup",
+    "Refer to source tree analysis for code organization",
+    "Use the project overview for quick reference"
+  ]
+}
