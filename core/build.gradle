@@ -1,0 +1,27 @@
+dependencies {
+    // Envers (히스토리 관리)
+    implementation 'org.springframework.data:spring-data-envers'
+
+    // QueryDSL
+    implementation "com.querydsl:querydsl-jpa:5.0.0:jakarta"
+    implementation "com.querydsl:querydsl-sql:5.0.0"
+    implementation "com.querydsl:querydsl-sql-spring:5.0.0"
+    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+}
+
+// QueryDSL 설정
+def generated = 'src/main/generated'
+
+tasks.withType(JavaCompile) {
+    options.getGeneratedSourceOutputDirectory().set(file(generated))
+}
+
+sourceSets {
+    main.java.srcDirs += [generated]
+}
+
+clean {
+    delete file(generated)
+}

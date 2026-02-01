@@ -1,1 +1,5 @@
-rootProject.name = 'pricewagon'
+rootProject.name = 'musinsa-wagon-back'
+
+include 'core'
+include 'fo'
+include 'batch'

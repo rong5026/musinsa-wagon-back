@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    hikari:
+      jdbc-url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:musinsa_wagon}
+      username: ${DB_USERNAME:root}
+      password: ${DB_PASSWORD:root}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+
+s3:
+  secret-key: ${S3_SECRET_KEY:}
+  access-key: ${S3_ACCESS_KEY:}
+  bucket: ${S3_BUCKET:dev-bucket}
