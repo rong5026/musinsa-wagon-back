@@ -1,0 +1,43 @@
+spring:
+  profiles:
+    group:
+      dev: core, common, dev
+      prod: core, common, prod
+      local: core, common, local
+    active: local
+
+---
+spring:
+  config:
+    activate:
+      on-profile: "common"
+  application:
+    name: musinsa-wagon-fo
+
+server:
+  port: 8080
+
+---
+spring:
+  config:
+    activate:
+      on-profile: "local"
+
+  datasource:
+    hikari:
+      jdbc-url: jdbc:mysql://localhost:3306/musinsa_wagon
+      username: root
+      password: 
+
+---
+spring:
+  config:
+    activate:
+      on-profile: "dev"
+
+---
+spring:
+  config:
+    activate:
+      on-profile: "prod"
+
