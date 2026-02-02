@@ -1,0 +1,27 @@
+name: Notion PR Merge Log
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: read
+
+jobs:
+  notion_log:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout (optional)
+        uses: actions/checkout@v4
+
+      - name: Run Notion log script
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+          NOTION_TITLE_PROP: name
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_PAYLOAD_JSON: ${{ toJson(github.event) }}
+        run: |
+          node notion/notion-pr-merge-log.mjs
